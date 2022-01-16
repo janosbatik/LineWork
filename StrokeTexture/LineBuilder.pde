@@ -1,32 +1,30 @@
-class LineSegment
+class VectorStroke
 {
   int numSegs = 320;
   float segLen = 1;
   ArrayList<PVector> line = new ArrayList<PVector>();
-  PVector start;
+  PVector o;
+  VectorStroke neighbour;
   color[] pallet;
   float perturbation = radians(3);
-  float yOffset = 40;
 
-  LineSegment(float x, LineSegment neighbour)
+  VectorStroke(PVector _o, int len, VectorStroke _neighbour)
   {
-    Setup(x);
+    Setup(_o, len, _neighbour);
     for (int i = 0; i < numSegs; i++)
     {
-      PVector nSeg = neighbour.line.get(i);
+      PVector nSeg = _neighbour.line.get(i);
       float rand = randomGaussian();
       float ang = nSeg.heading() + rand* perturbation;
       PVector seg = PVector.fromAngle(ang);
-      //println("ang:"+ ang + " per: " + perturbation + " heading: " + nSeg.heading());
-      //println( "_");
       seg.setMag(segLen);
       line.add(seg);
     }
   }
 
-  LineSegment(float x)
+  VectorStroke(PVector _o, int len)
   {
-    Setup(x);
+    Setup(_o, len, null);
 
     for (int i = 0; i < numSegs; i++)
     {
@@ -34,10 +32,12 @@ class LineSegment
     }
   }
 
-  void Setup(float x)
+  void Setup(PVector _o, int len, VectorStroke _neighbour)
   {
     SetPallet();
-    start = new PVector(x, yOffset);
+    o = _o;
+    numSegs = len;
+    neighbour = _neighbour;
   }
 
   void SetPallet() {
@@ -48,18 +48,31 @@ class LineSegment
     pallet[3] = #64113F;
   }
 
-  void DrawLineSegment()
+  void Draw()
   {
-    //stroke(pallet[int(random(4))]);
     stroke(#000000);
-    PVector prev = start.copy();
-    PVector next = start.copy();
+    PVector prev = o.copy();
+    PVector next = o.copy();
 
     for (int i = 0; i < numSegs; i++)
     {
       PVector addVec = line.get(i);
       next.add(addVec);
       line(prev.x, prev.y, next.x, next.y);
+    }
+  }
+
+  void Update(float spacing)
+  {
+    if (neighbour != null)
+    {
+      o.x = neighbour.o.x + spacing;
+      PVector nSeg = neighbour.line.get(0);
+      float ang = nSeg.heading() + randomGaussian()* perturbation;
+      PVector seg = PVector.fromAngle(ang);
+      seg.setMag(segLen);
+      line.add(0, seg);
+      line.remove(numSegs);
     }
   }
 }

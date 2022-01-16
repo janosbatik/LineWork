@@ -1,5 +1,5 @@
 
-ArrayList<Line> lines = new  ArrayList<Line>();
+ArrayList<VectorLine> lines = new  ArrayList<VectorLine>();
 float numLines;
 float xOffset = 40;
 float yOffset = 40;
@@ -15,16 +15,16 @@ void setup()
   PVector oR = oL.copy();
   PVector spacing = new PVector(1, 0);
   numLines =(width - 2*xOffset)/spacing.x+1;
-  Line prevL = new Line(oL);
-  Line prevR = new Line(oL);
-  Line nextLeft; Line nextRight;
+  VectorLine prevL = new VectorLine(oL);
+  VectorLine prevR = new VectorLine(oL);
+  VectorLine nextLeft; VectorLine nextRight;
   lines.add(prevL);
   for (int i = 1; i < numLines/2; i++)
   {
     oL.sub(spacing);
     oR.add(spacing);
-    nextLeft = new Line(oL, prevL);
-    nextRight = new Line(oR, prevR);
+    nextLeft = new VectorLine(oL, prevL);
+    nextRight = new VectorLine(oR, prevR);
     lines.add(nextLeft); 
     lines.add(nextRight);
     prevL = nextLeft; 
@@ -37,7 +37,7 @@ void draw()
 {
   background(#000000);
 
-  for (Line line : lines)
+  for (VectorLine line : lines)
   {
     line.Draw();
     line.Update();
