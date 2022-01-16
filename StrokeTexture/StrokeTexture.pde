@@ -1,5 +1,5 @@
 
-ArrayList<VectorStroke> lines = new  ArrayList<VectorStroke>();
+ArrayList<LineBuilder> lines = new  ArrayList<LineBuilder>();
 float numLines;
 int offset = 40;
 PVector o;
@@ -16,13 +16,13 @@ void setup()
   spacing = new PVector(minSpacing, 0);
   numLines = NumLines(minSpacing);
 
-  VectorStroke prev = new VectorStroke(o.copy(), height-2*offset);
-  VectorStroke next;
+  LineBuilder prev = new LineBuilder(o.copy(), height-2*offset);
+  LineBuilder next;
   lines.add(prev);
   for (int i = 0; i < numLines; i++)
   {
     o.add(spacing);
-    next = new VectorStroke(o.copy(), height-2*offset, prev);
+    next = new LineBuilder(o.copy(), height-2*offset, prev);
     lines.add(next);
     prev = next;
   }
@@ -35,7 +35,7 @@ void draw()
   numLines = NumLines(spacing);
   for (int i = 0; i < numLines; i++)
   {
-    VectorStroke line = lines.get(i);
+    LineBuilder line = lines.get(i);
     line.Update(spacing);
     line.Draw();
   }

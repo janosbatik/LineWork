@@ -1,14 +1,14 @@
-class VectorStroke
+class LineBuilder
 {
   int numSegs = 320;
   float segLen = 1;
   ArrayList<PVector> line = new ArrayList<PVector>();
   PVector o;
-  VectorStroke neighbour;
+  LineBuilder neighbour;
   color[] pallet;
   float perturbation = radians(3);
 
-  VectorStroke(PVector _o, int len, VectorStroke _neighbour)
+  LineBuilder(PVector _o, int len, LineBuilder _neighbour)
   {
     Setup(_o, len, _neighbour);
     for (int i = 0; i < numSegs; i++)
@@ -22,7 +22,7 @@ class VectorStroke
     }
   }
 
-  VectorStroke(PVector _o, int len)
+  LineBuilder(PVector _o, int len)
   {
     Setup(_o, len, null);
 
@@ -32,7 +32,7 @@ class VectorStroke
     }
   }
 
-  void Setup(PVector _o, int len, VectorStroke _neighbour)
+  void Setup(PVector _o, int len, LineBuilder _neighbour)
   {
     SetPallet();
     o = _o;
