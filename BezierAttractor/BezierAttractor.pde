@@ -2,6 +2,11 @@ ArrayList<BezierLine> bl = new ArrayList<BezierLine>();
 color[] pallet;
 color background = color(255);
 boolean attractControls = false;
+int mode = 1; 
+
+int offset = 60;
+int spacing = 10;
+int numSegs = 10;
 
 void setup()
 {
@@ -9,9 +14,11 @@ void setup()
   background(background);
   noFill();
   InitPallet();
-  int offset = 60;
-  int spacing = 10;
-  int numSegs = 10;
+  Setup();
+}
+
+void Setup()
+{
   int segLen = (width-2*offset)/numSegs; 
 
   for (int y = offset; y <= height-offset; y+=spacing) {
@@ -21,6 +28,7 @@ void setup()
     bl.add(b);
   }
 }
+
 void draw()
 {
   background(background);
@@ -28,8 +36,23 @@ void draw()
   {
     b.Draw();
     if (attractControls)
-      b.AttractControls();
-    else
+    {
+      switch(mode)
+      {
+        case(1): 
+          b.AttractControls();
+          break;
+        case(2): 
+          b.RepelControls();
+        break;
+        case(3): 
+          b.SplitControls(true);
+        break;
+        case(4): 
+          b.SplitControls(false);
+        break;
+      }
+    } else
       b.ReturnControls();
     //b.DrawAnchors();
     // b.DrawControlPoints();
@@ -44,6 +67,33 @@ void mouseReleased() {
   attractControls = false;
 }
 
+void keyPressed()
+{
+  // If the key is between 'A'(65) to 'Z' and 'a' to 'z'(122)
+  switch(key)
+  {
+    case('1'): // attractor
+    mode = 1;
+    println("Mode 1 - attractor");
+    break;
+    case('2'): // repeller
+    mode = 2;
+    println("Mode 2 - repeller");
+    break;
+    case('3'): // attract and repell
+    mode = 3;
+    println("Mode 3 - repeller & attractor");
+    break;
+    case('4'): // attract and repell
+    mode = 3;
+    println("Mode 4 - repeller & attractor");
+    break;
+    case('r'): // rest
+    case('R'):
+    Reset();
+    break;
+  }
+}
 void InitPallet()
 {
   pallet = new color[3]; 
@@ -56,4 +106,10 @@ color SomeColor()
 {
   int pick = floor(random(pallet.length));
   return pallet[pick];
+}
+
+void Reset()
+{
+  bl = new ArrayList<BezierLine>();
+  Setup();
 }

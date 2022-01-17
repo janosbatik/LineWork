@@ -83,6 +83,30 @@ class BezierLine
       seg.AttractToMouse();
   }
 
+  void RepelControls()
+  {
+    for (BezierSegment seg : line)
+      seg.RepelFromMouse();
+  }
+
+  void SplitControls(boolean attract1)
+  {
+    if (attract1)
+    {
+      for (BezierSegment seg : line)
+        seg.Attract1Repel2();
+    } else {
+      for (BezierSegment seg : line)
+        seg.Attract2Repel1();
+    }
+  }
+
+  void Attract2Repel1()
+  {
+    for (BezierSegment seg : line)
+      seg.RepelFromMouse();
+  }
+
   void ReturnControls()
   {
     for (BezierSegment seg : line)
@@ -116,6 +140,24 @@ class BezierSegment
   void AttractToMouse()
   {
     cont1.AttractToMouse();
+    cont2.AttractToMouse();
+  }
+
+  void RepelFromMouse()
+  {
+    cont1.RepelFromMouse();
+    cont2.RepelFromMouse();
+  }
+
+  void Attract1Repel2()
+  {
+    cont1.AttractToMouse();
+    cont2.RepelFromMouse();
+  }
+
+  void Attract2Repel1()
+  {
+    cont1.RepelFromMouse();
     cont2.AttractToMouse();
   }
 

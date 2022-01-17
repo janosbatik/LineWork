@@ -3,7 +3,6 @@ class Attractor {
   // The Mover tracks location, velocity, and acceleration 
   PVector location;
   PVector velocity;
-  PVector acceleration;
   // The Attractor's maximum speed
   float topspeed;
 
@@ -19,9 +18,26 @@ class Attractor {
     AttractToPoint(mouse);
   }
 
-  void AttractToPoint(PVector point) {
-
+  void AttractToPoint(PVector point) 
+  {
     PVector acceleration = PVector.sub(point, location);
+    Accelerate(acceleration);
+  }
+  
+  void RepelFromMouse() 
+  {
+    PVector mouse = new PVector(mouseX, mouseY);
+    RepelFromPoint(mouse);
+  }
+
+  void RepelFromPoint(PVector point) 
+  {
+    PVector acceleration = PVector.sub(location, point);
+    Accelerate(acceleration);
+  }
+
+  void Accelerate(PVector acceleration)
+  {
     acceleration.setMag(0.2);
 
     velocity.add(acceleration);
