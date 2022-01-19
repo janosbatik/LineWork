@@ -6,6 +6,9 @@ class Attractor {
   // The Attractor's maximum speed
   float topspeed;
 
+  boolean USE_FIXED_ACCELERATION = true;
+  float fixedAccelMag = 0.2;
+
   Attractor(float x, float y) {
     location = new PVector(x, y);
     velocity = new PVector(0, 0);
@@ -23,7 +26,7 @@ class Attractor {
     PVector acceleration = PVector.sub(point, location);
     Accelerate(acceleration);
   }
-  
+
   void RepelFromMouse() 
   {
     PVector mouse = new PVector(mouseX, mouseY);
@@ -38,7 +41,13 @@ class Attractor {
 
   void Accelerate(PVector acceleration)
   {
-    acceleration.setMag(0.2);
+    if (USE_FIXED_ACCELERATION)
+      acceleration.setMag(fixedAccelMag);
+    else {
+      float mag = acceleration.mag() == 0 ? 0 : 1/float(ceil(acceleration.y));
+      float mapMag = map(acceleration.y, -height, height, 0.2, 0.5);
+      acceleration.setMag(mapMag);
+    }
 
     velocity.add(acceleration);
     velocity.limit(topspeed);

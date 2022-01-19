@@ -1,7 +1,8 @@
 ArrayList<BezierLine> bl = new ArrayList<BezierLine>();
 color[] pallet;
-color background = color(255);
-boolean attractControls = false;
+color background = color(0);
+color lineColour = color(255);
+
 int mode = 1; 
 
 int offset = 60;
@@ -22,7 +23,7 @@ void Setup()
   int segLen = (width-2*offset)/numSegs; 
 
   for (int y = offset; y <= height-offset; y+=spacing) {
-    BezierLine b =  new BezierLine(offset, y, color(0));
+    BezierLine b =  new BezierLine(offset, y, lineColour);
     for (int x = segLen + offset; x <= width-offset; x+=segLen) 
       b.AddSegment(x, y, x - segLen*0.5, y-spacing*0.3, x - segLen*0.5, y+spacing*0.3);
     bl.add(b);
@@ -35,21 +36,18 @@ void draw()
   for (BezierLine b : bl)
   {
     b.Draw();
-    if (attractControls)
+    if (mousePressed)
     {
       switch(mode)
       {
         case(1): 
+        if (mouseButton == LEFT)
           b.AttractControls();
-          break;
-        case(2): 
+        else if (mouseButton == RIGHT)
           b.RepelControls();
         break;
-        case(3): 
-          b.SplitControls(true);
-        break;
-        case(4): 
-          b.SplitControls(false);
+        case(2): 
+          b.AttractAndRepelControls();
         break;
       }
     } else
@@ -59,14 +57,6 @@ void draw()
   }
 }
 
-void mousePressed() {
-  attractControls = true;
-}
-
-void mouseReleased() {
-  attractControls = false;
-}
-
 void keyPressed()
 {
   // If the key is between 'A'(65) to 'Z' and 'a' to 'z'(122)
@@ -74,19 +64,11 @@ void keyPressed()
   {
     case('1'): // attractor
     mode = 1;
-    println("Mode 1 - attractor");
+    println("Mode 1 - Push or Pull");
     break;
     case('2'): // repeller
     mode = 2;
-    println("Mode 2 - repeller");
-    break;
-    case('3'): // attract and repell
-    mode = 3;
-    println("Mode 3 - repeller & attractor");
-    break;
-    case('4'): // attract and repell
-    mode = 3;
-    println("Mode 4 - repeller & attractor");
+    println("Mode 2 - Push and Pull");
     break;
     case('r'): // rest
     case('R'):
